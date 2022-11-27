@@ -1,0 +1,56 @@
+protocol Screwdriver {
+    func screw() -> String
+}
+
+class ConcreteScrewdriver: Screwdriver {
+    func screw() -> String {
+        return "Screwing..."
+    }
+}
+
+class ScrewDecorator: Screwdriver {
+    private var screwdriver: Screwdriver
+    
+    init(_ screwdriver: Screwdriver) {
+        self.screwdriver = screwdriver
+    }
+    
+    func screw() -> String {
+        return screwdriver.screw()
+    }
+}
+
+class SonicDecorator: ScrewDecorator {
+    override func screw() -> String {
+        return "Sonic " + super.screw() + " "
+    }
+}
+
+class LaserDecorator: ScrewDecorator {
+    override func screw() -> String {
+        return "Laser " + super.screw() + " "
+    }
+}
+
+class Customer {
+    static func test(screwdriver: Screwdriver) {
+        print("Result: " + screwdriver.screw())
+    }
+}
+
+class ScrewdriverApp {
+    func test() {
+        let baseScrewDriver = ConcreteScrewdriver()
+        
+        Customer.test(screwdriver: baseScrewDriver)
+        
+        let sonicScrewDriver = SonicDecorator(baseScrewDriver)
+        let laserScrewDriver = LaserDecorator(sonicScrewDriver)
+        
+        Customer.test(screwdriver: laserScrewDriver)
+    }
+}
+
+let app = ScrewdriverApp()
+
+app.test()
